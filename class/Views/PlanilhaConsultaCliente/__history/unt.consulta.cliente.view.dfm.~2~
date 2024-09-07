@@ -1,0 +1,5 @@
+inherited frmPlantilhaConsulta1: TfrmPlantilhaConsulta1
+  Caption = 'DATAPA - Lista de  Clientes'
+  PixelsPerInch = 96
+  TextHeight = 13
+end

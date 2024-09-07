@@ -1,0 +1,33 @@
+unit unt.registro.producto.view;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, unt.formplantilharegistro.view,
+  Vcl.Buttons, Vcl.StdCtrls, Vcl.ExtCtrls;
+
+type
+  TfrmPlantilhaRegistro1 = class(TfrmPlantilhaRegistro)
+    Label1: TLabel;
+    EdtNombre: TEdit;
+    Label2: TLabel;
+    MemDescripcion: TMemo;
+    Label3: TLabel;
+    EdtPrecio: TEdit;
+    EdtQuantidad: TEdit;
+    Label4: TLabel;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmPlantilhaRegistro1: TfrmPlantilhaRegistro1;
+
+implementation
+
+{$R *.dfm}
+
+end.

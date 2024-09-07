@@ -1,0 +1,85 @@
+unit unt.vendas.view;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
+  FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client, Vcl.Grids, Vcl.DBGrids, Vcl.Buttons, Vcl.StdCtrls,
+  Vcl.ExtCtrls, unt.inc.vendas, unt.pedido.service;
+
+type
+  TfrmVendas = class(TForm)
+    pnTop: TPanel;
+    lblNombreBentana: TLabel;
+    pnCenter: TPanel;
+    pnButton: TPanel;
+    SpeedButton2: TSpeedButton;
+    Panel1: TPanel;
+    SpeedButton1: TSpeedButton;
+    SpeedButton3: TSpeedButton;
+    SpeedButton4: TSpeedButton;
+    DBGrid1: TDBGrid;
+    FDMemPrincipal: TFDMemTable;
+    DS_Principal: TDataSource;
+    procedure SpeedButton1Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+  private
+
+    FPedidoService : TPedidoService;
+    FPedidos       : TFDQuery;
+
+    procedure CrearDataSet;
+  public
+    procedure CargaDatos;
+
+  end;
+
+var
+  frmVendas: TfrmVendas;
+
+implementation
+
+{$R *.dfm}
+
+{ TfrmVendas }
+
+procedure TfrmVendas.CargaDatos;
+begin
+  FClentes := FClienteService.Load;
+  FClentes.FetchAll;
+  FDMemPrincipal.Close;
+  FDMemPrincipal.Filter := EmptyStr;
+  FDMemPrincipal.Data   := FClentes.Data;
+  FDMemPrincipal.Open;
+end;
+
+procedure TfrmVendas.CrearDataSet;
+begin
+  FDMemPrincipal.Close;
+  FDMemPrincipal.CreateDataSet;
+  FDMemPrincipal.Open;
+  FDMemPrincipal.EmptyDataSet;
+end;
+
+procedure TfrmVendas.FormCreate(Sender: TObject);
+begin
+  FPedidoService := TPedidoService.Create;
+  FPedidos       := TFDQuery.Create(nil);
+end;
+
+procedure TfrmVendas.FormDestroy(Sender: TObject);
+begin
+  FPedidoService.Dispos;
+end;
+
+procedure TfrmVendas.SpeedButton1Click(Sender: TObject);
+begin
+  Application.CreateForm(TfrmIncVendas, frmIncVendas);
+  frmIncVendas.ShowModal;
+end;
+
+end.

@@ -1,0 +1,12 @@
+inherited frmRegistroCliente: TfrmRegistroCliente
+  Caption = 'Registro de Clientes'
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited pnCenter: TPanel
+    ExplicitTop = 41
+    ExplicitHeight = 231
+  end
+  inherited pnButton: TPanel
+    ExplicitTop = 272
+  end
+end

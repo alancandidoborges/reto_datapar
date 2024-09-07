@@ -1,0 +1,35 @@
+unit unt.pedido;
+
+interface
+
+uses unt.elementos.pedido, Generics.Collections;
+
+type
+  TPedido = class
+    private
+      FID         : Integer;
+      FElementos  : TObjectList<TElementosPedido>;
+      FValorTotal : Extended;
+    public
+      property ID         : Integer                       read FID         write FID;
+      property Elementos  : TObjectList<TElementosPedido> read FElementos  write FElementos;
+      property ValorTotal : Extended                      read FValorTotal write FValorTotal;
+
+      constructor Create();
+      destructor Destroy; override;
+  end;
+
+implementation
+
+constructor TPedido.Create;
+begin
+  FElementos := TObjectList<TElementosPedido>.Create;
+end;
+
+destructor TPedido.Destroy;
+begin
+  Elementos.Free;
+  inherited;
+end;
+
+end.

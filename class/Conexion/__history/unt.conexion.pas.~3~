@@ -1,0 +1,69 @@
+unit unt.conexion;
+
+interface
+
+uses
+  FireDAC.Stan.Option, FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf,
+  FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys,
+  FireDAC.Phys.MySQL, FireDAC.Phys.Oracle, FireDAC.VCLUI.Wait,
+  FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf, FireDAC.DApt, Data.DB,
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, RTTI, Datasnap.DBClient;
+
+type TConexion = Class
+  private
+    FDiver : TFDPhysOracleDriverLink;
+    FConn  : TFDConnection;
+    procedure ConfigurarConexion;
+  public
+    constructor Create;
+    destructor Destroy; override;
+
+    function getConn: TFDConnection;
+    function CrearQuery: TFDQuery;
+  end;
+
+implementation
+
+constructor TConexion.Create;
+begin
+  FDiver := TFDPhysOracleDriverLink.Create(nil);
+  FConn := TFDConnection.Create(nil);
+  ConfigurarConexion;
+  FConn.Connected := True;
+end;
+
+destructor TConexion.Destroy;
+begin
+  FConn.Connected := False;
+  FConn.DisposeOf;
+  FDiver.DisposeOf;
+  inherited;
+end;
+
+
+procedure TConexion.ConfigurarConexion;
+begin
+  FDiver.VendorLib      := 'C:\Test_Datapar\Dll\oci.dll';
+  FConn.Params.DriverID := 'Ora';
+  FConn.Params.Database := '192.168.0.215:1521/XEPDB1';
+  FConn.Params.UserName := 'ALAN';
+  FConn.Params.Password := '123';
+  FConn.LoginPrompt     := False;
+
+end;
+
+function TConexion.CrearQuery: TFDQuery;
+var
+  vQuery: TFDQuery;
+begin
+  vQuery := TFDQuery.Create(nil);
+  vQuery.Connection := FConn;
+  Result := vQuery;
+end;
+
+function TConexion.getConn: TFDConnection;
+begin
+  Result := FConn;
+end;
+
+end.

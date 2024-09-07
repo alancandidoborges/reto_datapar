@@ -1,0 +1,168 @@
+unit unt.elementos.pedido.dao;
+
+interface
+
+uses
+  FireDAC.Comp.Client, System.SysUtils, unt.conexion.controller,
+  unt.elementos.pedido, FireDAC.VCLUI.Wait, FireDAC.FMXUI.Wait,
+  FireDAC.ConsoleUI.Wait, Generics.Collections, unt.producto.service;
+
+type
+  TElementosPedidoDAO = Class
+  private
+    FQuery              : TFDQuery;
+    FElementosPedido    : TElementosPedido;
+    FProductoService    : TProductoService;
+    Function BuscaCodigo: Integer;
+
+  public
+    function Load(ElementosPedidoID: Integer): TElementosPedido; overload;
+    function Load: TFDQuery; overload;
+    function Insert(AElementosPedido: TElementosPedido): Integer;
+    function Edit(AElementosPedido: TElementosPedido): Boolean;
+    function Delete(UsuarioID: Integer): Boolean;
+    function LoadByPedido(PedidoID: Integer): TObjectList<TElementosPedido>;
+    function LoadGrid: TFDQuery;
+
+    Constructor Create;
+    Destructor Destroy; override;
+  End;
+
+implementation
+
+function TElementosPedidoDAO.BuscaCodigo: Integer;
+begin
+  FQuery.close;
+  FQuery.Open('select max(id) as id from ElementosPedido');
+  Result := FQuery.FieldByName('id').AsInteger;
+end;
+
+constructor TElementosPedidoDAO.Create;
+begin
+  FQuery := TConexionController.GetInstance().Conexion.CrearQuery;
+  FElementosPedido := TElementosPedido.Create;
+  FProductoService := TProductoService.Create;
+end;
+
+function TElementosPedidoDAO.Delete(UsuarioID: Integer): Boolean;
+begin
+  FQuery.Close;
+  FQuery.SQL.Clear;
+  FQuery.SQL.Add('delete from ElementosPedido where id = ' + UsuarioID.ToString);
+  FQuery.ExecSQL;
+  Result := True;
+end;
+
+destructor TElementosPedidoDAO.Destroy;
+begin
+  FQuery.Close;
+  FQuery           := nil;
+  FElementosPedido := nil;
+  FElementosPedido.DisposeOf;
+  FQuery.DisposeOf;
+  FProductoService.DisposeOf;
+  inherited;
+end;
+
+function TElementosPedidoDAO.Edit(AElementosPedido: TElementosPedido): Boolean;
+var
+  StrSql: string;
+begin
+  StrSql := 'update ElementosPedido set ';
+  StrSql := StrSql + 'COD_PRODUCTO = '    + AElementosPedido.Producto.ID.ToString      + ', ';
+  StrSql := StrSql + 'VALOR_UNITARIO = '  + FloatToStr(AElementosPedido.ValorUnitario) + ', ';
+  StrSql := StrSql + 'VALOR_TOTAL = '     + FloatToStr(AElementosPedido.ValorTotal)    + ', ';
+	StrSql := StrSql + 'CANTIDAD = '        + FloatToStr(AElementosPedido.Cantidad)      + ', ';
+  StrSql := StrSql + 'where id = '        + AElementosPedido.ID.ToString;
+  FQuery.Close;
+  FQuery.SQL.Clear;
+  FQuery.SQL.Add(StrSql);
+  FQuery.ExecSQL;
+  Result := True;
+end;
+
+function TElementosPedidoDAO.Insert(AElementosPedido: TElementosPedido): Integer;
+var
+  StrSql: string;
+begin
+  StrSql := 'INSERT INTO ElementosPedido(COD_PRODUCTO, VALOR_UNITARIO, VALOR_TOTAL, CANTIDAD)';
+  StrSql := StrSql + 'VALUES( ';
+  StrSql := StrSql + AElementosPedido.Producto.ID.ToString      + ', ';
+  StrSql := StrSql + FloatToStr(AElementosPedido.ValorUnitario) + ', ';
+  StrSql := StrSql + FloatToStr(AElementosPedido.ValorTotal)    + ', ';
+  StrSql := StrSql + FloatToStr(AElementosPedido.Cantidad)+ ') ';
+  FQuery.close;
+  FQuery.SQL.Clear;
+  FQuery.ExecSQL(StrSql);
+  Result := BuscaCodigo();
+end;
+
+function TElementosPedidoDAO.Load: TFDQuery;
+begin
+  try
+    FQuery.Open('select * from ElementosPedido order by id, nome');
+    Result := FQuery;
+  finally
+    //FQuery.Close;
+  end;
+end;
+
+function TElementosPedidoDAO.LoadByPedido(PedidoID: Integer): TObjectList<TElementosPedido>;
+var
+  Ponteiro: Integer;
+  List    : TObjectList<TElementosPedido>;
+begin
+  List := TObjectList<TElementosPedido>.Create;
+  try
+    FQuery.Open('select * from ElementosPedido where PEDIDO = :Pedido', [PedidoID]);
+    if FQuery.RecordCount <> 0 then
+    begin
+      List.Add(TElementosPedido.Create);
+      Ponteiro := Pred(FQuery.RecNo);
+      List[Ponteiro].id              := FQuery.FieldByName('ID').Value;
+      List[Ponteiro].Producto        := FProductoService.Load(FQuery.FieldByName('COD_PRODUCTO').Value);
+      List[Ponteiro].ValorUnitario   := FQuery.FieldByName('VALOR_UNITARIO').Value;
+      List[Ponteiro].ValorTotal      := FQuery.FieldByName('VALOR_TOTAL').Value;
+      List[Ponteiro].Cantidad        := FQuery.FieldByName('CANTIDAD').Value;
+      List[Ponteiro].Pedido          := FQuery.FieldByName('Pedido').Value;
+    end;
+  finally
+    Result := List;
+    FQuery.Close;
+  end;
+end;
+
+function TElementosPedidoDAO.LoadGrid: TFDQuery;
+var
+  StrSql: String;
+begin
+  try
+    StrSql := 'select item.pedido as cod_venda, item.id as codigo, producto.id as cod_producto, ';
+    StrSql := StrSql + ' producto.descripcion, item.cantidad, item.valor_unitario as Precio, item.valor_total as PrecioTotal, item.TipoOperacion ';
+    StrSql := StrSql + ' from  elementospedido item, producto producto where item.cod_producto = producto.id ';
+    FQuery.Open(StrSql);
+    Result := FQuery;
+  finally
+    FQuery.Close;
+  end;
+end;
+
+function TElementosPedidoDAO.Load(ElementosPedidoID: Integer): TElementosPedido;
+begin
+  try
+    FQuery.Open('select * from ElementosPedido where id = :id', [ElementosPedidoID]);
+    if FQuery.RecordCount <> 0 then
+    begin
+      FElementosPedido.id            := FQuery.FieldByName('ID').Value;
+      FElementosPedido.Producto.ID   := FQuery.FieldByName('COD_PRODUCTO').Value;
+      FElementosPedido.ValorUnitario := FQuery.FieldByName('VALOR_UNITARIO').Value;
+      FElementosPedido.ValorTotal    := FQuery.FieldByName('VALOR_TOTAL').Value;
+      FElementosPedido.Cantidad      := FQuery.FieldByName('CANTIDAD').Value;
+      Result := FElementosPedido;
+    end;
+  finally
+    FQuery.Close;
+  end;
+end;
+
+end.

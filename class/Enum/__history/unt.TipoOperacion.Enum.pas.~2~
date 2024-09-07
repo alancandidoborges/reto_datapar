@@ -1,0 +1,13 @@
+unit unt.TipoOperacion.Enum;
+
+interface
+
+uses
+  Classes, SysUtils, StrUtils;
+
+type
+  TTipoOperacaoEnum = (toIncluir, toAlterar, toExcluir);
+
+implementation
+
+end.

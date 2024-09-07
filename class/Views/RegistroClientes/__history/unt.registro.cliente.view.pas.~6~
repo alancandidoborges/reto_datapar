@@ -1,0 +1,118 @@
+unit unt.registro.cliente.view;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, unt.formplantilharegistro.view,
+  Vcl.Buttons, Vcl.StdCtrls, Vcl.ExtCtrls, unt.cliente, unt.cliente.service;
+
+type
+  TfrmRegistroCliente = class(TfrmPlantilhaRegistro)
+    Label1: TLabel;
+    edtNombre: TEdit;
+    Label2: TLabel;
+    edtCpf: TEdit;
+    Label3: TLabel;
+    edtTelefono: TEdit;
+    Label4: TLabel;
+    EdtCorreoElectronico: TEdit;
+    Label5: TLabel;
+    edtDirecion: TEdit;
+    EdtNumero: TEdit;
+    Label6: TLabel;
+    Label7: TLabel;
+    EdtVencidario: TEdit;
+    Label8: TLabel;
+    EdtCiudad: TEdit;
+    Label9: TLabel;
+    EdtCodigoPostal: TEdit;
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+  private
+    FCliente      : TCliente;
+    ClienteService: TClienteService;
+  public
+    function Grabar     : Integer; override;
+    function Consiste   : Boolean; override;
+    function CargarDatos: Boolean; override;
+
+    procedure CargarObjeto; override;
+    property Cliente: TCliente read FCliente write FCliente;
+  end;
+
+var
+  frmRegistroCliente: TfrmRegistroCliente;
+
+implementation
+
+{$R *.dfm}
+
+uses unt.TipoOperacion.Enum;
+
+
+function TfrmRegistroCliente.CargarDatos: Boolean;
+begin
+  if TipoOperacion = toAlterar then
+  begin
+    Cliente := ClienteService.Load(Codigo);
+    if Assigned(Cliente) then
+    begin
+      edtNombre.Text            := Cliente.Nombre;
+      edtCpf.Text               := Cliente.CPF;
+      edtTelefono.Text          := Cliente.Telefono;
+      EdtCorreoElectronico.Text := Cliente.CorreoElectronico;
+      edtDirecion.Text          := Cliente.Direccion;
+      EdtNumero.Text            := Cliente.Numero;
+      EdtVencidario.Text        := Cliente.Vecindario;
+      EdtCiudad.Text            := Cliente.Vecindario;
+    end
+    else
+    begin
+      ShowMessage('Erro');
+      Close;
+    end;
+  end;
+end;
+
+procedure TfrmRegistroCliente.CargarObjeto;
+begin
+  inherited;
+  Cliente.Nombre            :=  EdtNombre.Text;
+  Cliente.CPF               :=  EdtCpf.Text;
+  Cliente.Telefono          :=  EdtTelefono.Text;
+  Cliente.CorreoElectronico :=  EdtCorreoElectronico.Text;
+  Cliente.Direccion         :=  edtDirecion.Text;
+  Cliente.Numero            :=  EdtNumero.Text;
+  Cliente.Vecindario        :=  EdtVencidario.Text;
+  Cliente.Ciudad            :=  EdtCiudad.Text;
+  Cliente.CodigoPostal      :=  EdtCodigoPostal.Text;
+end;
+
+function TfrmRegistroCliente.Consiste: Boolean;
+begin
+  result := true;
+end;
+
+procedure TfrmRegistroCliente.FormCreate(Sender: TObject);
+begin
+  inherited;
+  Cliente        := TCliente.Create;
+  ClienteService := TClienteService.Create;
+end;
+
+procedure TfrmRegistroCliente.FormDestroy(Sender: TObject);
+begin
+  inherited;
+  Cliente.DisposeOf;
+  ClienteService.DisposeOf;
+end;
+
+function TfrmRegistroCliente.Grabar: Integer;
+begin
+   inherited;
+   Result := ClienteService.Insert(Cliente);
+   Close;
+end;
+
+end.

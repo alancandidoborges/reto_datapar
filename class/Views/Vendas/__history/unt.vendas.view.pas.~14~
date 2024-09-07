@@ -1,0 +1,147 @@
+unit unt.vendas.view;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
+  FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client, Vcl.Grids, Vcl.DBGrids, Vcl.Buttons, Vcl.StdCtrls,
+  Vcl.ExtCtrls, unt.inc.vendas, unt.pedido.service, unt.TipoOperacion.Enum;
+
+type
+  TfrmVendas = class(TForm)
+    pnTop: TPanel;
+    lblNombreBentana: TLabel;
+    pnCenter: TPanel;
+    pnButton: TPanel;
+    SpeedButton2: TSpeedButton;
+    Panel1: TPanel;
+    btn_incluir: TSpeedButton;
+    btn_alterar: TSpeedButton;
+    btn_excluir: TSpeedButton;
+    DBGrid1: TDBGrid;
+    FDMemPrincipal: TFDMemTable;
+    DS_Principal: TDataSource;
+    FDMemPrincipalID: TFMTBCDField;
+    FDMemPrincipalCODIGOCLI: TFMTBCDField;
+    FDMemPrincipalNOMBRE: TStringField;
+    FDMemPrincipalDATA_ENTREGA: TDateTimeField;
+    FDMemPrincipalDATA_INC: TDateTimeField;
+    FDMemPrincipalVALOR_TOTAL: TBCDField;
+    procedure btn_incluirClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure btn_alterarClick(Sender: TObject);
+    procedure SpeedButton2Click(Sender: TObject);
+    procedure FDMemPrincipalVALOR_TOTALGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
+    procedure DBGrid1DblClick(Sender: TObject);
+    procedure btn_excluirClick(Sender: TObject);
+  private
+
+    FPedidoService : TPedidoService;
+    FPedidos       : TFDQuery;
+
+    procedure CrearDataSet;
+
+  public
+    procedure CargaDatos;
+
+  end;
+
+var
+  frmVendas: TfrmVendas;
+
+implementation
+
+{$R *.dfm}
+
+{ TfrmVendas }
+
+procedure TfrmVendas.CargaDatos;
+begin
+  FPedidos := FPedidoService.LoadGrid;
+  FPedidos.FetchAll;
+  FDMemPrincipal.Close;
+  FDMemPrincipal.Filter := EmptyStr;
+  FDMemPrincipal.Data   := FPedidos.Data;
+  FDMemPrincipal.Open;
+end;
+
+procedure TfrmVendas.CrearDataSet;
+begin
+  FDMemPrincipal.Close;
+  FDMemPrincipal.CreateDataSet;
+  FDMemPrincipal.Open;
+  FDMemPrincipal.EmptyDataSet;
+end;
+
+procedure TfrmVendas.DBGrid1DblClick(Sender: TObject);
+begin
+  btn_alterar.Click();
+end;
+
+procedure TfrmVendas.FDMemPrincipalVALOR_TOTALGetText(Sender: TField;
+  var Text: string; DisplayText: Boolean);
+begin
+  Text := FormatFloat('###,0.00', Sender.AsFloat);
+end;
+
+procedure TfrmVendas.FormCreate(Sender: TObject);
+begin
+  CrearDataSet();
+  FPedidoService := TPedidoService.Create;
+  FPedidos       := TFDQuery.Create(nil);
+end;
+
+procedure TfrmVendas.FormDestroy(Sender: TObject);
+begin
+  FPedidoService.DisposeOf;
+end;
+
+procedure TfrmVendas.FormShow(Sender: TObject);
+begin
+  CargaDatos();
+end;
+
+procedure TfrmVendas.btn_excluirClick(Sender: TObject);
+var
+  confExcl: Integer;
+begin
+  beep;
+  confExcl:= Application.MessageBox('¿Quieres eliminar?','Atenção',MB_YESNO + MB_DEFBUTTON1 + MB_ICONINFORMATION);
+  if confExcl = IDYES then
+  begin
+    FPedidoService.Delete(FDMemPrincipal.FieldByName('ID').AsInteger)
+  end;
+
+end;
+
+procedure TfrmVendas.btn_incluirClick(Sender: TObject);
+begin
+  Application.CreateForm(TfrmIncVendas, frmIncVendas);
+  frmIncVendas.TipoOperacion := toIncluir;
+  frmIncVendas.ShowModal;
+  CargaDatos();
+end;
+procedure TfrmVendas.SpeedButton2Click(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TfrmVendas.btn_alterarClick(Sender: TObject);
+begin
+  if (FDMemPrincipal.Active) and (FDMemPrincipal.RecordCount > 0) then
+  begin
+    Application.CreateForm(TfrmIncVendas, frmIncVendas);
+    frmIncVendas.TipoOperacion := toAlterar;
+    frmIncVendas.Codigo := FDMemPrincipal.FieldByName('ID').AsInteger;
+    frmIncVendas.ShowModal;
+    CargaDatos();
+  end;
+end;
+
+end.

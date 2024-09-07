@@ -1,0 +1,5 @@
+inherited frmPlantilhaRegistro1: TfrmPlantilhaRegistro1
+  Caption = 'frmPlantilhaRegistro1'
+  PixelsPerInch = 96
+  TextHeight = 13
+end

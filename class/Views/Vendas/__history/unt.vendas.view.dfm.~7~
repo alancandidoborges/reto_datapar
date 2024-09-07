@@ -1,0 +1,221 @@
+object frmVendas: TfrmVendas
+  Left = 0
+  Top = 0
+  BorderStyle = bsDialog
+  Caption = 'DATAPAR - Lista de Ventas'
+  ClientHeight = 343
+  ClientWidth = 658
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poScreenCenter
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object pnTop: TPanel
+    Left = 0
+    Top = 0
+    Width = 658
+    Height = 41
+    Align = alTop
+    BevelInner = bvRaised
+    BevelOuter = bvLowered
+    Color = clBlack
+    ParentBackground = False
+    TabOrder = 0
+    ExplicitWidth = 499
+    object lblNombreBentana: TLabel
+      AlignWithMargins = True
+      Left = 5
+      Top = 8
+      Width = 104
+      Height = 21
+      Alignment = taCenter
+      Caption = 'Lista de Ventas'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWhite
+      Font.Height = -21
+      Font.Name = 'Segoe MDL2 Assets'
+      Font.Style = []
+      ParentFont = False
+    end
+  end
+  object pnCenter: TPanel
+    Left = 0
+    Top = 41
+    Width = 658
+    Height = 235
+    Align = alClient
+    BevelInner = bvRaised
+    BevelOuter = bvLowered
+    ParentBackground = False
+    TabOrder = 1
+    ExplicitWidth = 499
+    ExplicitHeight = 203
+    object DBGrid1: TDBGrid
+      Left = 2
+      Top = 2
+      Width = 654
+      Height = 231
+      Align = alClient
+      DataSource = DS_Principal
+      TabOrder = 0
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      Columns = <
+        item
+          Expanded = False
+          FieldName = 'ID'
+          Width = 65
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'DATA_INC'
+          Width = 75
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'CODIGOCLI'
+          Width = 76
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'NOMBRE'
+          Width = 226
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'DATA_ENTREGA'
+          Width = 73
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'VALOR_TOTAL'
+          Visible = True
+        end>
+    end
+  end
+  object pnButton: TPanel
+    Left = 0
+    Top = 312
+    Width = 658
+    Height = 31
+    Align = alBottom
+    BevelInner = bvRaised
+    BevelOuter = bvLowered
+    ParentBackground = False
+    TabOrder = 2
+    ExplicitTop = 280
+    ExplicitWidth = 499
+    object SpeedButton2: TSpeedButton
+      Left = 580
+      Top = 1
+      Width = 74
+      Height = 27
+      Caption = 'Sair'
+    end
+  end
+  object Panel1: TPanel
+    Left = 0
+    Top = 276
+    Width = 658
+    Height = 36
+    Align = alBottom
+    BevelInner = bvRaised
+    BevelOuter = bvLowered
+    ParentBackground = False
+    TabOrder = 3
+    ExplicitTop = 244
+    ExplicitWidth = 499
+    object SpeedButton1: TSpeedButton
+      Left = 0
+      Top = 4
+      Width = 65
+      Height = 29
+      Caption = 'Incluir'
+      OnClick = SpeedButton1Click
+    end
+    object SpeedButton3: TSpeedButton
+      Left = 71
+      Top = 3
+      Width = 65
+      Height = 29
+      Caption = 'Alterar'
+    end
+    object SpeedButton4: TSpeedButton
+      Left = 135
+      Top = 3
+      Width = 65
+      Height = 29
+      Caption = 'Excluir'
+    end
+  end
+  object FDMemPrincipal: TFDMemTable
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode]
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 56
+    Top = 81
+    object FDMemPrincipalID: TFMTBCDField
+      DisplayLabel = 'N'#186' Controle'
+      FieldName = 'ID'
+      Origin = 'ID'
+      Precision = 38
+      Size = 0
+    end
+    object FDMemPrincipalDATA_INC: TDateTimeField
+      DisplayLabel = 'Data-Inclusion'
+      FieldName = 'DATA_INC'
+      Origin = 'DATA_INC'
+    end
+    object FDMemPrincipalCODIGOCLI: TFMTBCDField
+      DisplayLabel = 'Cod.Cliente'
+      FieldName = 'CODIGOCLI'
+      Origin = 'CODIGOCLI'
+      Required = True
+      Precision = 38
+      Size = 0
+    end
+    object FDMemPrincipalNOMBRE: TStringField
+      DisplayLabel = 'Nombre Cliente'
+      FieldName = 'NOMBRE'
+      Origin = 'NOMBRE'
+      Size = 100
+    end
+    object FDMemPrincipalDATA_ENTREGA: TDateTimeField
+      DisplayLabel = 'Data-Entrega'
+      FieldName = 'DATA_ENTREGA'
+      Origin = 'DATA_ENTREGA'
+    end
+    object FDMemPrincipalVALOR_TOTAL: TBCDField
+      DisplayLabel = 'Precio Total'
+      FieldName = 'VALOR_TOTAL'
+      Origin = 'VALOR_TOTAL'
+      Precision = 16
+      Size = 2
+    end
+  end
+  object DS_Principal: TDataSource
+    DataSet = FDMemPrincipal
+    Left = 160
+    Top = 129
+  end
+end

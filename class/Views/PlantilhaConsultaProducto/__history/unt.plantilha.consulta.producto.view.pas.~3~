@@ -1,0 +1,75 @@
+unit unt.plantilha.consulta.producto.view;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, unt.plantilha.consulta.view, Data.DB,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.StdCtrls, Vcl.Buttons,
+  Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls, unt.producto, unt.producto.service,
+  unt.TipoOperacion.Enum;
+
+type
+  TfrmPlantilhaConsultaProducto = class(TfrmPlantilhaConsulta)
+    FDMemPrincipalID: TFMTBCDField;
+    FDMemPrincipalNOMBRE: TStringField;
+    FDMemPrincipalDESCRIPCION: TStringField;
+    FDMemPrincipalPRECIO: TBCDField;
+    FDMemPrincipalCANTIDAD: TFloatField;
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+  private
+    FProducto       : TFDQuery;
+    FProductoService: TProductoService;
+  public
+    procedure CadastroShowModal(TipoOperacion: TTipoOperacion; ACodigo: Integer); override;
+    procedure CargaDatos; override;
+    procedure ExcluirRegistro(ACodigo: Integer); override;
+  end;
+
+var
+  frmPlantilhaConsultaProducto: TfrmPlantilhaConsultaProducto;
+
+implementation
+
+{$R *.dfm}
+
+
+{ TfrmPlantilhaConsultaProducto }
+
+procedure TfrmPlantilhaConsultaProducto.CadastroShowModal(
+  TipoOperacion: TTipoOperacion; ACodigo: Integer);
+begin
+  inherited;
+
+end;
+
+procedure TfrmPlantilhaConsultaProducto.CargaDatos;
+begin
+  inherited;
+
+end;
+
+procedure TfrmPlantilhaConsultaProducto.ExcluirRegistro(ACodigo: Integer);
+begin
+  inherited;
+
+end;
+
+procedure TfrmPlantilhaConsultaProducto.FormCreate(Sender: TObject);
+begin
+  inherited;
+  FProducto        := TFDQuery.Create(nil);
+  FProductoService := TProductoService.Create;
+end;
+
+procedure TfrmPlantilhaConsultaProducto.FormDestroy(Sender: TObject);
+begin
+  inherited;
+  FProducto.DisposeOf;
+  FProductoService.DisposeOf;
+end;
+
+end.

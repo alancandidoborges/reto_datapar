@@ -1,0 +1,23 @@
+unit unt.pedido;
+
+interface
+
+uses unt.elementos.pedido, Generics.Collections;;
+
+type
+  TPedido = class
+    private
+      FID               : Integer;
+      FElementosPedido  : List<TElementosPedido>;
+      FValorTotal       : Extended;
+
+    public
+      property ID               : Integer                read FID              write FID;
+      property ElementosPedido  : List<TElementosPedido> read FElementosPedido write FElementosPedido;
+      property ValorTotal       : Extended               read FValorTotal      write FValorTotal;
+  end;
+
+implementation
+
+
+end.

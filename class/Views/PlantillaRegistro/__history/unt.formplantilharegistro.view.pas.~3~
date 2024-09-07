@@ -1,0 +1,32 @@
+unit unt.formplantilharegistro.view;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs;
+
+type
+  TfrmFormPadrao = class(TForm)
+  private
+    { Private declarations }
+  public
+    property Codigo:  Integer read FCodigo write FCodigo;
+    property TipoOperacao: TTipoOperacaoEnum read FTipoOperacao write FTipoOperacao;
+
+    property NomeJanela:  String read FNomeJanela write FNomeJanela;
+
+    function Gravar: Integer; virtual; abstract;
+    function Consiste: Boolean; virtual; abstract;
+    function CarregarDados: Boolean; virtual; abstract;
+
+  end;
+
+var
+  frmFormPadrao: TfrmFormPadrao;
+
+implementation
+
+{$R *.dfm}
+
+end.

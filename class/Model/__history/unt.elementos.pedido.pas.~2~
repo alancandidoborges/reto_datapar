@@ -1,0 +1,27 @@
+unit unt.elementos.pedido;
+
+interface
+
+uses unt.producto;
+
+type
+  TElementosPedido = class
+    private
+      FProducto     : TProducto;
+      FValorUnitario: Extended;
+      FID           : Integer;
+      FValorTotal   : Extended;
+      FCantidad     : Extended;
+    public
+      property ID           : Integer   read FID            write FID;
+      property Producto     : TProducto read FProducto      write FProducto;
+      property Cantidad     : Extended  read FCantidad      write FCantidad;
+      property ValorUnitario: Extended  read FValorUnitario write FValorUnitario;
+      property ValorTotal   : Extended  read FValorTotal    write FValorTotal;
+  end;
+
+implementation
+
+
+
+end.

@@ -1,0 +1,62 @@
+unit unt.cliente.service;
+
+interface
+
+uses
+  unt.cliente.dao, unt.cliente, FireDAC.Comp.Client;
+
+type
+  TClienteService = class
+    private
+      FClienteDao : TClienteDao;
+    public
+      constructor Create();
+      destructor Destroy; override;
+
+      function Load(UsuarioID: Integer): TCliente; overload;
+      function Load: TFDQuery; overload;
+      function Insert(ACliente: TCliente): Integer;
+      function Edit(ACliente: TCliente): Boolean;
+      function Delete(UsuarioID: Integer): Boolean;
+  end;
+
+implementation
+
+constructor TClienteService.Create;
+begin
+  FClienteDao := TClienteDao.Create;
+end;
+
+function TClienteService.Delete(UsuarioID: Integer): Boolean;
+begin
+  Result := FClienteDao.Delete(UsuarioID);
+end;
+
+destructor TClienteService.Destroy;
+begin
+  FClienteDao.DisposeOf;
+  inherited;
+end;
+
+function TClienteService.Edit(ACliente: TCliente): Boolean;
+begin
+  Result := FClienteDao.Edit(ACliente);
+end;
+
+function TClienteService.Insert(ACliente: TCliente): Integer;
+begin
+  Result := FClienteDao.Insert(ACliente);
+end;
+
+function TClienteService.Load(UsuarioID: Integer): TCliente;
+begin
+  Result := FClienteDao.Load(UsuarioID);
+end;
+
+function TClienteService.Load: TFDQuery;
+begin
+  Result := FClienteDao.Load;
+end;
+
+
+end.

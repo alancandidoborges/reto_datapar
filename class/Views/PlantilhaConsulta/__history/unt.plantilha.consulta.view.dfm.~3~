@@ -1,0 +1,147 @@
+object frmPlantilhaConsulta: TfrmPlantilhaConsulta
+  Left = 0
+  Top = 0
+  BorderStyle = bsDialog
+  Caption = 'frmPlantilhaConsulta'
+  ClientHeight = 351
+  ClientWidth = 575
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poScreenCenter
+  OnShow = FormShow
+  PixelsPerInch = 96
+  TextHeight = 13
+  object pnTop: TPanel
+    Left = 0
+    Top = 0
+    Width = 575
+    Height = 43
+    Align = alTop
+    BevelInner = bvRaised
+    BevelOuter = bvLowered
+    Color = clBlack
+    ParentBackground = False
+    TabOrder = 0
+    object lblNombreBentana: TLabel
+      Left = 10
+      Top = 13
+      Width = 104
+      Height = 16
+      Caption = 'lblNombreBentana'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWhite
+      Font.Height = -16
+      Font.Name = 'Segoe MDL2 Assets'
+      Font.Style = []
+      ParentFont = False
+    end
+  end
+  object pnCenter: TPanel
+    Left = 0
+    Top = 99
+    Width = 575
+    Height = 207
+    Align = alClient
+    BevelInner = bvRaised
+    BevelOuter = bvLowered
+    ParentBackground = False
+    TabOrder = 1
+    object DBGrid1: TDBGrid
+      Left = 2
+      Top = 2
+      Width = 571
+      Height = 203
+      Align = alClient
+      DataSource = DS_Principal
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+      TabOrder = 0
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      OnDblClick = DBGrid1DblClick
+    end
+  end
+  object pnButton: TPanel
+    Left = 0
+    Top = 306
+    Width = 575
+    Height = 45
+    Align = alBottom
+    BevelInner = bvRaised
+    BevelOuter = bvLowered
+    ParentBackground = False
+    TabOrder = 2
+    object SpeedButton2: TSpeedButton
+      Left = 485
+      Top = 6
+      Width = 86
+      Height = 35
+      Caption = 'Salir'
+    end
+  end
+  object Panel1: TPanel
+    Left = 0
+    Top = 43
+    Width = 575
+    Height = 56
+    Align = alTop
+    BevelInner = bvRaised
+    BevelOuter = bvLowered
+    ParentBackground = False
+    TabOrder = 3
+    object Label1: TLabel
+      Left = 11
+      Top = 8
+      Width = 41
+      Height = 13
+      Caption = 'Localizar'
+    end
+    object btnIncluir: TSpeedButton
+      Left = 393
+      Top = 15
+      Width = 86
+      Height = 35
+      Caption = 'Incluir'
+      OnClick = btnIncluirClick
+    end
+    object btnBorrar: TSpeedButton
+      Left = 485
+      Top = 17
+      Width = 86
+      Height = 35
+      Caption = 'Borrar'
+      OnClick = btnBorrarClick
+    end
+    object edtLocalizar: TEdit
+      Left = 10
+      Top = 27
+      Width = 337
+      Height = 21
+      CharCase = ecUpperCase
+      TabOrder = 0
+    end
+  end
+  object FDMemPrincipal: TFDMemTable
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode]
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 48
+    Top = 155
+  end
+  object DS_Principal: TDataSource
+    DataSet = FDMemPrincipal
+    Left = 136
+    Top = 155
+  end
+end

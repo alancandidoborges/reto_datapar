@@ -1,0 +1,10 @@
+inherited frmPlantilhaConsulta1: TfrmPlantilhaConsulta1
+  Caption = 'frmPlantilhaConsulta1'
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited pnButton: TPanel
+    inherited SpeedButton2: TSpeedButton
+      OnClick = nil
+    end
+  end
+end

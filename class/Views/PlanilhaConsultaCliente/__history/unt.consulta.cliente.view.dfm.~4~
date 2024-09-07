@@ -1,0 +1,153 @@
+inherited frmPlantilhaConsultaCliente: TfrmPlantilhaConsultaCliente
+  Caption = 'DATAPAR - Lista de  Clientes'
+  ClientHeight = 378
+  ClientWidth = 636
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  ExplicitWidth = 642
+  ExplicitHeight = 407
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited pnTop: TPanel
+    Width = 636
+  end
+  inherited pnCenter: TPanel
+    Width = 636
+    Height = 234
+    inherited DBGrid1: TDBGrid
+      Width = 632
+      Height = 230
+      Columns = <
+        item
+          Expanded = False
+          FieldName = 'ID'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'NOMBRE'
+          Width = 417
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'TELEFONO'
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'CPF'
+          Visible = False
+        end
+        item
+          Expanded = False
+          FieldName = 'DIRECCION'
+          Visible = False
+        end
+        item
+          Expanded = False
+          FieldName = 'NUMERO'
+          Visible = False
+        end
+        item
+          Expanded = False
+          FieldName = 'VECINDARIO'
+          Visible = False
+        end
+        item
+          Expanded = False
+          FieldName = 'CIUDAD'
+          Visible = False
+        end
+        item
+          Expanded = False
+          FieldName = 'CODIGOPOSTAL'
+          Visible = False
+        end
+        item
+          Expanded = False
+          FieldName = 'CORREOELECTRONICO'
+          Visible = False
+        end>
+    end
+  end
+  inherited pnButton: TPanel
+    Top = 333
+    Width = 636
+    inherited SpeedButton2: TSpeedButton
+      Left = 541
+      ExplicitLeft = 541
+    end
+  end
+  inherited Panel1: TPanel
+    Width = 636
+    inherited btnIncluir: TSpeedButton
+      Left = 449
+      Top = 17
+      ExplicitLeft = 449
+      ExplicitTop = 17
+    end
+    inherited btnBorrar: TSpeedButton
+      Left = 541
+      ExplicitLeft = 541
+    end
+    inherited edtLocalizar: TEdit
+      Width = 433
+      ExplicitWidth = 433
+    end
+  end
+  inherited FDMemPrincipal: TFDMemTable
+    object FDMemPrincipalID: TIntegerField
+      DisplayLabel = 'Codigo'
+      FieldName = 'ID'
+    end
+    object FDMemPrincipalNOMBRE: TStringField
+      DisplayLabel = 'Nombre'
+      FieldName = 'NOMBRE'
+      Size = 100
+    end
+    object FDMemPrincipalCPF: TStringField
+      DisplayLabel = 'C.P.F'
+      FieldName = 'CPF'
+    end
+    object FDMemPrincipalTELEFONO: TStringField
+      DisplayLabel = 'Telefono'
+      FieldName = 'TELEFONO'
+    end
+    object FDMemPrincipalDIRECCION: TStringField
+      DisplayLabel = 'Direccion'
+      FieldName = 'DIRECCION'
+      Visible = False
+      Size = 150
+    end
+    object FDMemPrincipalNUMERO: TStringField
+      DisplayLabel = 'Numero'
+      FieldName = 'NUMERO'
+      Visible = False
+      Size = 10
+    end
+    object FDMemPrincipalVECINDARIO: TStringField
+      DisplayLabel = 'Vencinario'
+      FieldName = 'VECINDARIO'
+      Visible = False
+      Size = 60
+    end
+    object FDMemPrincipalCIUDAD: TStringField
+      FieldName = 'CIUDAD'
+      Visible = False
+      Size = 50
+    end
+    object FDMemPrincipalCODIGOPOSTAL: TStringField
+      DisplayLabel = 'Codigo Postal'
+      FieldName = 'CODIGOPOSTAL'
+      Visible = False
+      Size = 25
+    end
+    object FDMemPrincipalCORREOELECTRONICO: TStringField
+      DisplayLabel = 'Correo Eletroc'
+      FieldName = 'CORREOELECTRONICO'
+      Visible = False
+      Size = 100
+    end
+  end
+end

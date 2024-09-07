@@ -1,0 +1,173 @@
+unit unt.cliente.dao;
+
+interface
+
+uses
+  FireDAC.Comp.Client, System.SysUtils, uConexaoController, uCliente,
+  FireDAC.VCLUI.Wait, FireDAC.FMXUI.Wait, FireDAC.ConsoleUI.Wait;
+
+type
+  TClienteDAO = Class
+  private
+    FQuery: TFDQuery;
+    FCliente: TCliente;
+    Function BuscaCodigo: Integer;
+
+  public
+    function Load(UsuarioID: Integer): TCliente; overload;
+    function Load: TFDQuery; overload;
+    function Insert(ACliente: TCliente): Integer;
+    function Edit(ACliente: TCliente): Boolean;
+    function Delete(UsuarioID: Integer): Boolean;
+    function EfatuaLogin(Login, ASenha: String): TCliente;
+
+    Constructor Create;
+    Destructor Destroy; override;
+  End;
+
+implementation
+
+{ TClienteDAO }
+
+uses unt.cliente, unt.conexion.controller;
+
+function TClienteDAO.BuscaCodigo: Integer;
+begin
+  FQuery.close;
+  FQuery.Open('select max(id) as id from Cliente');
+  Result := FQuery.FieldByName('id').AsInteger;
+end;
+
+constructor TClienteDAO.Create;
+begin
+  FQuery := TConexionController.GetInstance().Conexao.CriarQuery;
+  FCliente := TCliente.Create;
+end;
+
+function TClienteDAO.Delete(UsuarioID: Integer): Boolean;
+begin
+  FQuery.Close;
+  FQuery.SQL.Clear;
+  FQuery.SQL.Add('delete from Cliente where id = ' + UsuarioID.ToString);
+  FQuery.ExecSQL;
+  Result := True;
+end;
+
+destructor TClienteDAO.Destroy;
+begin
+  FQuery.Close;
+  FCliente.DisposeOf;
+  FQuery.DisposeOf;
+  inherited;
+end;
+
+function TClienteDAO.Edit(ACliente: TCliente): Boolean;
+var
+  StrSql: string;
+begin
+  StrSql := 'update Cliente set ';
+  StrSql := StrSql + 'nome = '          + QuotedStr(ACliente.Nome)  + ', ';
+  StrSql := StrSql + 'SENHA = '         + QuotedStr(ACliente.Senha) + ', ';
+  StrSql := StrSql + 'Login = '         + QuotedStr(ACliente.Login) + ', ';
+	StrSql := StrSql + 'Bairro = '        + QuotedStr(ACliente.Bairro) + ', ';
+	StrSql := StrSql + 'Cep ='            + QuotedStr(ACliente.Cep) + ', ';
+	StrSql := StrSql + 'Complemento= '    + QuotedStr(ACliente.Complemento) + ', ';
+	StrSql := StrSql + 'Ddd = '           + QuotedStr(ACliente.Ddd) + ', ';
+	StrSql := StrSql + 'Gia = '           + QuotedStr(ACliente.Gia) + ', ';
+	StrSql := StrSql + 'Ibge =  '         + QuotedStr(ACliente.Ibge) + ', ';
+	StrSql := StrSql + 'Localidade = '    + QuotedStr(ACliente.Localidade) + ', ';
+	StrSql := StrSql + 'Logradouro = '    + QuotedStr(ACliente.Logradouro) + ', ';
+	StrSql := StrSql + 'Siafi = '         + QuotedStr(ACliente.Siafi) + ', ';
+	StrSql := StrSql + 'Uf = '            + QuotedStr(ACliente.Uf) + ' ';
+  StrSql := StrSql + 'where id = '      + ACliente.ID.ToString;
+  FQuery.Close;
+  FQuery.SQL.Clear;
+  FQuery.SQL.Add(StrSql);
+  FQuery.ExecSQL;
+  Result := True;
+end;
+
+function TClienteDAO.EfatuaLogin(Login, ASenha: String): TCliente;
+begin
+  FQuery.Open('select * from Cliente where LOGIN = :login and senha = :senha', [Login, ASenha]);
+  if FQuery.RecordCount <> 0 then
+  begin
+    FCliente.id          := FQuery.FieldByName('ID').Value;
+    FCliente.Login       := FQuery.FieldByName('LOGIN').Value;
+    FCliente.SENHA       := FQuery.FieldByName('SENHA').Value;
+    FCliente.Nome        := FQuery.FieldByName('Nome').Value;
+    FCliente.Bairro      := FQuery.FieldByName('Bairro').Value;
+    FCliente.Cep         := FQuery.FieldByName('Cep').Value;
+    FCliente.Complemento := FQuery.FieldByName('Complemento').Value;
+    FCliente.Ddd         := FQuery.FieldByName('Ddd').Value;
+    FCliente.Gia         := FQuery.FieldByName('Gia').Value;
+    FCliente.Ibge        := FQuery.FieldByName('Ibge').Value;
+    FCliente.Localidade  := FQuery.FieldByName('Localidade').Value;
+    FCliente.Logradouro  := FQuery.FieldByName('Logradouro').Value;
+    FCliente.Siafi       := FQuery.FieldByName('Siafi').Value;
+    FCliente.Uf          := FQuery.FieldByName('Uf').Value;
+    Result := FCliente;
+  end;
+end;
+
+function TClienteDAO.Insert(ACliente: TCliente): Integer;
+var
+  StrSql: string;
+begin
+  StrSql := 'INSERT INTO Cliente(VECINDARIO, CODIGOPOSTAL, CIUDAD, CPF , DIRECCION, NUMERO, TELEFONO, NOMBRE, CORREOELECTRONICO)';
+  StrSql := StrSql + 'VALUES( ';
+  StrSql := StrSql + QuotedStr(ACliente.VECINDARIO)        + ',';
+  StrSql := StrSql + QuotedStr(ACliente.CODIGOPOSTAL)      + ',';
+  StrSql := StrSql + QuotedStr(ACliente.CIUDAD)            + ',';
+  StrSql := StrSql + QuotedStr(ACliente.DIRECCION)         + ',';
+  StrSql := StrSql + QuotedStr(ACliente.NUMERO)            + ',';
+  StrSql := StrSql + QuotedStr(ACliente.TELEFONO)          + ',';
+  StrSql := StrSql + QuotedStr(ACliente.NOMBRE)            + ',';
+  StrSql := StrSql + QuotedStr(ACliente.CORREOELECTRONICO) + ')';
+
+  FQuery.close;
+  FQuery.SQL.Clear;
+  FQuery.ExecSQL(StrSql);
+  Result := BuscaCodigo;
+end;
+
+function TClienteDAO.Load: TFDQuery;
+begin
+  try
+    FQuery.Open('select * from Cliente order by id, nome');
+    Result := FQuery;
+  finally
+    //FQuery.Close;
+  end;
+end;
+
+function TClienteDAO.Load(UsuarioID: Integer): TCliente;
+begin
+  try
+    FQuery.Open('select * from Cliente where id = :id', [UsuarioID]);
+    if FQuery.RecordCount <> 0 then
+    begin
+      FCliente.id          := FQuery.FieldByName('ID').Value;
+      FCliente.SENHA       := FQuery.FieldByName('SENHA').Value;
+      FCliente.Login       := FQuery.FieldByName('LOGIN').Value;
+      FCliente.Nome        := FQuery.FieldByName('NOME').Value;
+      FCliente.Login       := FQuery.FieldByName('LOGIN').Value;
+      FCliente.SENHA       := FQuery.FieldByName('SENHA').Value;
+      FCliente.Nome        := FQuery.FieldByName('Nome').Value;
+      FCliente.Bairro      := FQuery.FieldByName('Bairro').Value;
+      FCliente.Cep         := FQuery.FieldByName('Cep').Value;
+      FCliente.Complemento := FQuery.FieldByName('Complemento').Value;
+      FCliente.Ddd         := FQuery.FieldByName('Ddd').Value;
+      FCliente.Gia         := FQuery.FieldByName('Gia').Value;
+      FCliente.Ibge        := FQuery.FieldByName('Ibge').Value;
+      FCliente.Localidade  := FQuery.FieldByName('Localidade').Value;
+      FCliente.Logradouro  := FQuery.FieldByName('Logradouro').Value;
+      FCliente.Siafi       := FQuery.FieldByName('Siafi').Value;
+      FCliente.Uf          := FQuery.FieldByName('Uf').Value;
+      Result := FCliente;
+    end;
+  finally
+    FQuery.Close;
+  end;
+end;
+end.
